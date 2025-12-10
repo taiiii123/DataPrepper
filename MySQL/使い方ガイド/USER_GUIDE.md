@@ -1,4 +1,4 @@
-# DataPrepper 使い方ガイド
+# DataPrepper for MySQL 使い方ガイド
 
 このガイドでは、DataPrepperの使い方を手順に沿って説明します。
 
@@ -21,18 +21,18 @@
 
 ## 1. 事前準備
 
-### 1.1 MySQL CLI の確認
+### 1.1 MySQL CLI のバージョン確認
 
 ツールを使用する前に、MySQLコマンドラインツールが正しくインストールされているか確認します。
 
 1. **操作シート**を開きます
-2. 「**MySQL CLIの確認**」ボタンをクリックします
+2. 「**バージョン確認**」ボタンをクリックします
 
-![MySQL CLI確認ボタン](guide-image/01_mysql_cli_check_button.png)
+![バージョン確認ボタン](guide-image/01_mysql_cli_check_button.png)
 
 3. 正常にインストールされている場合、バージョン情報が表示されます
 
-![MySQL CLI確認成功](guide-image/02_mysql_cli_success.png)
+![バージョン確認成功](guide-image/02_mysql_cli_success.png)
 
 > ⚠️ **エラーが表示される場合**
 > - MySQL がインストールされているか確認してください
@@ -293,7 +293,7 @@ NULL を登録したい場合は、以下のいずれかを入力します：
 
 ## 10. 実行ステータスの確認
 
-v3.0.0で追加された機能です。各操作の実行状態を視覚的に確認できます。
+各操作の実行状態を視覚的に確認できます。
 
 ### 10.1 ステータス表示エリア
 
