@@ -1,6 +1,6 @@
 # DataPrepper for Oracle
 
-Oracle Databaseへのテストデータ投入を効率化するExcel VBAツールです。
+Oracle Databaseへのテストデータ投入を効率化するExcelマクロツールです。
 
 ## 概要
 

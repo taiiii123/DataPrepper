@@ -1,6 +1,6 @@
 # DataPrepper for MySQL
 
-MySQLデータベースへのテストデータ投入を効率化するExcel VBAツールです。
+MySQLデータベースへのテストデータ投入を効率化するExcelマクロツールです。
 
 ## 概要
 
