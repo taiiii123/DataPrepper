@@ -1,8 +1,10 @@
 -- ============================================
 -- TODO管理テーブル (MySQL)
 -- ============================================
+-- テーブル削除（存在する場合）
 DROP TABLE IF EXISTS todos;
 
+-- テーブル作成
 CREATE TABLE todos (
     id              INT             NOT NULL AUTO_INCREMENT COMMENT 'ID',
     title           VARCHAR(200)    NOT NULL COMMENT 'タイトル',
@@ -13,11 +15,7 @@ CREATE TABLE todos (
     due_date        DATE            NULL COMMENT '期限日',
     created_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
     updated_at      DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時',
-    PRIMARY KEY (id),
-    INDEX idx_status (status),
-    INDEX idx_due_date (due_date),
-    INDEX idx_priority (priority),
-    INDEX idx_category (category)
+    PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='TODO管理';
 
 -- テストデータ
