@@ -14,9 +14,9 @@ DataPrepperは、Excelシート上でテストデータを構造化して管理�
 
 | データベース | ファイル名 | 詳細 |
 |-------------|-----------|------|
-| MySQL | `MySQL/mysql_input_test_data.xlsm` | [MySQL版 README](MySQL/README.md) |
-| Oracle | `Oracle/oracle_input_test_data.xlsm` | [Oracle版 README](Oracle/README.md) |
-| PostgreSQL | `PostgreSQL/postgresql_input_test_data.xlsm` | [PostgreSQL版 README](PostgreSQL/README.md) |
+| MySQL | `MySQL/dataprepper_for_mysql.xlsm` | [MySQL版 README](MySQL/README.md) |
+| Oracle | `Oracle/dataprepper_for_oracle.xlsm` | [Oracle版 README](Oracle/README.md) |
+| PostgreSQL | `PostgreSQL/dataprepper_for_postgresql.xlsm` | [PostgreSQL版 README](PostgreSQL/README.md) |
 
 ## 主要機能
 
