@@ -37,8 +37,9 @@ MySQLコマンドラインツールが正しくインストールされている
 
 ### 3. SQL ファイル作成
 入力シートのデータからINSERT文を含むSQLファイルを自動生成します。
-- 出力先: `./output/inputN_テーブル名.sql`
+- 出力先: `./output/input{GroupNo}_{SheetOrder}_テーブル名.sql`
 - DELETE文 + INSERT文のセットを生成
+- シート順序（SheetOrder）により、複数テーブルの登録順序を制御
 
 ### 4. SQL 文確認
 生成されるSQL文を新規ブックでプレビュー表示します。実際にファイル出力する前に内容を確認できます。
@@ -65,8 +66,9 @@ MySQLコマンドラインツールが正しくインストールされている
 
 ```
 ./output/
-├── input1_テーブル名.sql    # Group 1 の SQL ファイル
-├── input2_テーブル名.sql    # Group 2 の SQL ファイル
+├── input1_1_users.sql       # Group 1, シート順序 1 の SQL ファイル
+├── input1_2_orders.sql      # Group 1, シート順序 2 の SQL ファイル
+├── input2_1_users.sql       # Group 2, シート順序 1 の SQL ファイル
 ├── ...
 ├── backup/
 │   └── backup_YYYYMMDD.sql  # バックアップファイル
@@ -75,6 +77,10 @@ MySQLコマンドラインツールが正しくインストールされている
 │   └── execute_mysql.bat    # SQL実行用バッチファイル（自動生成）
 └── mysql_log.txt            # 実行ログ
 ```
+
+> **ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
+> - GroupNo: テストデータのGroup番号
+> - SheetOrder: 入力シートの順序番号（1から開始、登録順序を制御）
 
 ## 生成されるSQLの形式
 
@@ -113,14 +119,15 @@ mysql -h localhost -P 3306 -u root -p test_database < ./output/backup/backup_202
 
 ## バージョン情報
 
-- **バージョン**: 1.2.2
-- **最終更新日**: 2025/12/20
+- **バージョン**: 2.0.0
+- **最終更新日**: 2025/12/26
 - **作成者**: Yamada Taiki
 
 ## 変更履歴
 
 | バージョン | 日付 | 変更内容 |
 |-----------|------|----------|
+| 2.0.0 | 2025/12/26 | 登録順序を考慮したファイル名生成（input{GroupNo}_{SheetOrder}_テーブル名.sql） |
 | 1.2.2 | 2025/12/20 | confフォルダの隠し属性を削除、ファイル削除処理を削除、バッチファイルの保存先を変更 |
 | 1.2.1 | 2025/12/10 | 「MySQL CLI確認」ボタンの名称を「バージョン確認」ボタンに修正 |
 | 1.2.0 | 2025/12/06 | 「操作」シートに実行ステータス機能を追加 |

@@ -150,13 +150,15 @@
 ```
 Group | No | → 出力ファイル
 ------|----|---------------
-  1   | 1  | input1_テーブル名.sql（DELETE + INSERT）
-  1   | 2  |                      （INSERT追加）
-  1   | 3  |                      （INSERT追加）
+  1   | 1  | input1_{シート順序}_テーブル名.sql（DELETE + INSERT）
+  1   | 2  |                                   （INSERT追加）
+  1   | 3  |                                   （INSERT追加）
       |    |
-  2   | 1  | input2_テーブル名.sql（DELETE + INSERT）
-  2   | 2  |                      （INSERT追加）
+  2   | 1  | input2_{シート順序}_テーブル名.sql（DELETE + INSERT）
+  2   | 2  |                                   （INSERT追加）
 ```
+
+> 💡 **ポイント**: シート順序は「_入力」で終わるシートの並び順（左から1, 2, 3...）で決まります。これにより、複数テーブル間の登録順序を制御できます。
 
 ![GroupとNoの関係](guide-image/10_group_no_explanation.png)
 
@@ -229,11 +231,15 @@ PostgreSQLで使用可能な主なデータ型：
 ### 出力されるファイル
 ```
 ./output/
-├── input1_users.sql      ← Group 1 のSQLファイル
-├── input2_users.sql      ← Group 2 のSQLファイル
-├── input1_orders.sql     ← 別テーブルのGroup 1
+├── input1_1_users.sql      ← Group 1, シート順序 1 のSQLファイル
+├── input1_2_orders.sql     ← Group 1, シート順序 2 のSQLファイル
+├── input2_1_users.sql      ← Group 2, シート順序 1 のSQLファイル
+├── input2_2_orders.sql     ← Group 2, シート順序 2 のSQLファイル
 └── ...
 ```
+
+> 💡 **ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
+> - データ登録時はシート順序（SheetOrder）の昇順で実行されるため、外部キー制約のある親テーブルを先（シート順序が小さい方）に配置してください。
 
 ---
 

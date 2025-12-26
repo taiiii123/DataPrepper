@@ -38,8 +38,9 @@ Oracle SQL*Plusコマンドラインツールが正しくインストールさ�
 
 ### 3. SQL ファイル作成
 入力シートのデータからINSERT文を含むSQLファイルを自動生成します。
-- 出力先: `./output/inputN_テーブル名.sql`
+- 出力先: `./output/input{GroupNo}_{SheetOrder}_テーブル名.sql`
 - DELETE文 + INSERT文 + COMMIT文のセットを生成
+- シート順序（SheetOrder）により、複数テーブルの登録順序を制御
 - 文字コード: Shift-JIS（Windows日本語環境のSQL*Plus対応）
 
 ### 4. SQL 文確認
@@ -67,8 +68,9 @@ Oracle SQL*Plusコマンドラインツールが正しくインストールさ�
 
 ```
 ./output/
-├── input1_テーブル名.sql    # Group 1 の SQL ファイル
-├── input2_テーブル名.sql    # Group 2 の SQL ファイル
+├── input1_1_users.sql       # Group 1, シート順序 1 の SQL ファイル
+├── input1_2_orders.sql      # Group 1, シート順序 2 の SQL ファイル
+├── input2_1_users.sql       # Group 2, シート順序 1 の SQL ファイル
 ├── ...
 ├── backup/
 │   ├── backup_YYYYMMDD.dmp  # バックアップファイル（ダンプ形式）
@@ -77,6 +79,10 @@ Oracle SQL*Plusコマンドラインツールが正しくインストールさ�
 │   └── execute_sqlplus.bat  # SQL実行用バッチファイル（自動生成）
 └── sqlplus_log.txt          # 実行ログ
 ```
+
+> **ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
+> - GroupNo: テストデータのGroup番号
+> - SheetOrder: 入力シートの順序番号（1から開始、登録順序を制御）
 
 ## 生成されるSQLの形式
 
@@ -117,14 +123,15 @@ imp root/password123@localhost:1521/ORCL file=./output/backup/backup_20241224.dm
 
 ## バージョン情報
 
-- **バージョン**: 1.0.1
-- **最終更新日**: 2025/12/20
+- **バージョン**: 2.0.0
+- **最終更新日**: 2025/12/26
 - **作成者**: Yamada Taiki
 
 ## 変更履歴
 
 | バージョン | 日付 | 変更内容 |
 |-----------|------|----------|
+| 2.0.0 | 2025/12/26 | 登録順序を考慮したファイル名生成（input{GroupNo}_{SheetOrder}_テーブル名.sql） |
 | 1.0.1 | 2025/12/20 | confフォルダの隠し属性を削除、ファイル削除処理を削除、バッチファイルの保存先を変更 |
 | 1.0.0 | 2025/12/10 | 新規作成 |
 
