@@ -4,7 +4,7 @@ PostgreSQLデータベースへのテストデータ投入を効率化するExce
 
 ## 概要
 
-本ツールは、Excelシート上でテストデータを管理し、INSERT文の自動生成やデータベースへの直接登録を行うことができます。
+本ツールは、Excelシート上でテストデータを管理し、INSERT文の自動生成やデータベースへの直接登録を行うことができます。<br>
 開発・テスト環境でのデータ準備作業を大幅に効率化します。
 
 ## 動作要件
@@ -37,18 +37,21 @@ PostgreSQLコマンドラインツール（psql）が正しくインストール
 
 ### 3. SQL ファイル作成
 入力シートのデータからINSERT文を含むSQLファイルを自動生成します。
-- 出力先: `./output/input{GroupNo}_{SheetOrder}_テーブル名.sql`
+- 出力先: `./output/group{GroupNo}/input{GroupNo}_{SheetOrder}_テーブル名.sql`
 - DELETE文 + INSERT文のセットを生成
 - シート順序（SheetOrder）により、複数テーブルの登録順序を制御
+- Group番号ごとにフォルダを分けて出力
 
 ### 4. SQL 文確認
 生成されるSQL文を新規ブックでプレビュー表示します。実際にファイル出力する前に内容を確認できます。
 
 ### 5. データ登録
 生成したSQLファイルをPostgreSQLデータベースに直接実行してテストデータを登録します。
+- 選択したGroup番号に対応するフォルダ内のSQLファイルを順番に実行
 
 ### 6. OUTPUTフォルダ確認・表示
 出力フォルダ内のSQLファイル一覧を確認、またはエクスプローラーで開きます。
+- Groupフォルダごとにファイル一覧を表示
 
 ### 7. 実行ステータス表示
 各機能の実行状態（未実行/実行中/完了/エラー）と実行時刻をリアルタイムで表示します。
@@ -66,17 +69,23 @@ PostgreSQLコマンドラインツール（psql）が正しくインストール
 
 ```
 ./output/
-├── input1_1_users.sql       # Group 1, シート順序 1 の SQL ファイル
-├── input1_2_orders.sql      # Group 1, シート順序 2 の SQL ファイル
-├── input2_1_users.sql       # Group 2, シート順序 1 の SQL ファイル
-├── ...
+├── group1/                      # Group 1 のSQLファイル
+│   ├── input1_1_users.sql       # Group 1, シート順序 1
+│   └── input1_2_orders.sql      # Group 1, シート順序 2
+├── group2/                      # Group 2 のSQLファイル
+│   ├── input2_1_users.sql       # Group 2, シート順序 1
+│   └── input2_2_orders.sql      # Group 2, シート順序 2
 ├── backup/
-│   └── backup_YYYYMMDD.sql  # バックアップファイル
+│   └── backup_YYYYMMDD.sql      # バックアップファイル
 ├── conf/
-│   ├── pgpass.conf          # PostgreSQL 接続設定（自動生成）
-│   └── execute_psql.bat     # SQL実行用バッチファイル（自動生成）
-└── psql_log.txt             # 実行ログ
+│   ├── pgpass.conf              # PostgreSQL 接続設定（自動生成）
+│   └── execute_psql.bat         # SQL実行用バッチファイル（自動生成）
+└── psql_log.txt                 # 実行ログ
 ```
+
+> **フォルダ構成**: `output/group{GroupNo}/`
+> - GroupNoごとにフォルダを分けて管理
+> - データ登録時は選択したGroupフォルダ内のファイルのみ実行
 
 > **ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
 > - GroupNo: テストデータのGroup番号
@@ -118,14 +127,15 @@ psql "postgresql://postgres:mypassword@localhost:5432/test_database" < ./output/
 
 ## バージョン情報
 
-- **バージョン**: 2.0.0
-- **最終更新日**: 2025/12/26
+- **バージョン**: 2.1.0
+- **最終更新日**: 2025/12/27
 - **作成者**: Yamada Taiki
 
 ## 変更履歴
 
 | バージョン | 日付 | 変更内容 |
 |-----------|------|----------|
+| 2.1.0 | 2025/12/27 | GROUPフォルダ毎にSQLファイルを出力する機能を追加 |
 | 2.0.0 | 2025/12/26 | 登録順序を考慮したファイル名生成（input{GroupNo}_{SheetOrder}_テーブル名.sql） |
 | 1.0.1 | 2025/12/20 | confフォルダの隠し属性を削除、ファイル削除処理を削除、バッチファイルの保存先を変更 |
 | 1.0.0 | 2025/12/10 | 新規作成 |
@@ -152,3 +162,7 @@ psql "postgresql://postgres:mypassword@localhost:5432/test_database" < ./output/
 - `./output/psql_log.txt` でエラー内容を確認
 - DB接続設定が正しいか確認
 - SQL文の構文エラーがないか確認
+- 対象のGroupフォルダ（`output/group{番号}/`）が存在するか確認
+
+### 「group○フォルダが存在しません」と表示される場合
+- 先に「ファイル作成」を実行してGroupフォルダとSQLファイルを生成してください

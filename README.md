@@ -31,7 +31,7 @@ DataPrepperは、Excelシート上でテストデータを構造化して管理�
 - Windows環境
 - 各データベースのCLIツール
   - MySQL: `mysql.exe`、`mysqldump.exe`
-  - Oracle: `sqlplus.exe`
+  - Oracle: `sqlplus.exe`、`exp.exe`
   - PostgreSQL: `psql.exe`、`pg_dump.exe`
 
 ## 使用方法
@@ -69,12 +69,25 @@ DataPrepperは、Excelシート上でテストデータを構造化して管理�
 
 ```
 ./output/
-├── input1_テーブル名.sql    # Group 1 のSQLファイル
-├── input2_テーブル名.sql    # Group 2 のSQLファイル
+├── group1/                      # Group 1 のSQLファイル
+│   ├── input1_1_users.sql       # Group 1, シート順序 1
+│   └── input1_2_orders.sql      # Group 1, シート順序 2
+├── group2/                      # Group 2 のSQLファイル
+│   ├── input2_1_users.sql       # Group 2, シート順序 1
+│   └── input2_2_orders.sql      # Group 2, シート順序 2
 ├── backup/
-│   └── backup_YYYYMMDD.sql  # バックアップファイル
-└── mysql_log.txt            # 実行ログ
+│   └── backup_YYYYMMDD.sql      # バックアップファイル
+└── conf/
+    └── ...                      # 設定ファイル（自動生成）
 ```
+
+> **フォルダ構成**: `output/group{GroupNo}/`
+> - GroupNoごとにフォルダを分けて管理
+> - データ登録時は選択したGroupフォルダ内のファイルのみ実行
+
+> **ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
+> - GroupNo: テストデータのGroup番号
+> - SheetOrder: 入力シートの順序番号（1から開始、登録順序を制御）
 
 ## 生成されるSQL例
 

@@ -153,17 +153,20 @@
 - **B10セル（最初のNo）は必ず「1」から開始**してください
 
 ```
-Group | No | → 出力ファイル
-------|----|---------------
-  1   | 1  | input1_{シート順序}_テーブル名.sql（DELETE + INSERT + COMMIT）
-  1   | 2  |                                   （INSERT追加）
-  1   | 3  |                                   （INSERT追加）
+Group | No | → 出力フォルダ/ファイル
+------|----|---------------------------
+  1   | 1  | group1/input1_{シート順序}_テーブル名.sql（DELETE + INSERT + COMMIT）
+  1   | 2  |                                          （INSERT追加）
+  1   | 3  |                                          （INSERT追加）
       |    |
-  2   | 1  | input2_{シート順序}_テーブル名.sql（DELETE + INSERT + COMMIT）
-  2   | 2  |                                   （INSERT追加）
+  2   | 1  | group2/input2_{シート順序}_テーブル名.sql（DELETE + INSERT + COMMIT）
+  2   | 2  |                                          （INSERT追加）
 ```
 
-> 💡 **ポイント**: シート順序は「_入力」で終わるシートの並び順（左から1, 2, 3...）で決まります。これにより、複数テーブル間の登録順序を制御できます。
+> 💡 **ポイント**:
+> - Group番号ごとにフォルダが分かれます（group1, group2, ...）
+> - シート順序は「_入力」で終わるシートの並び順（左から1, 2, 3...）で決まります
+> - これにより、複数テーブル間の登録順序を制御できます
 
 ![GroupとNoの関係](guide-image/10_group_no_explanation.png)
 
@@ -236,12 +239,18 @@ Oracleで使用可能な主なデータ型：
 ### 出力されるファイル
 ```
 ./output/
-├── input1_1_USERS.sql      ← Group 1, シート順序 1 のSQLファイル
-├── input1_2_ORDERS.sql     ← Group 1, シート順序 2 のSQLファイル
-├── input2_1_USERS.sql      ← Group 2, シート順序 1 のSQLファイル
-├── input2_2_ORDERS.sql     ← Group 2, シート順序 2 のSQLファイル
+├── group1/                     ← Group 1 のフォルダ
+│   ├── input1_1_USERS.sql      ← Group 1, シート順序 1 のSQLファイル
+│   └── input1_2_ORDERS.sql     ← Group 1, シート順序 2 のSQLファイル
+├── group2/                     ← Group 2 のフォルダ
+│   ├── input2_1_USERS.sql      ← Group 2, シート順序 1 のSQLファイル
+│   └── input2_2_ORDERS.sql     ← Group 2, シート順序 2 のSQLファイル
 └── ...
 ```
+
+> 💡 **フォルダ構成**: `output/group{GroupNo}/`
+> - Group番号ごとにフォルダが作成されます
+> - データ登録時は選択したGroupフォルダ内のファイルのみが実行されます
 
 > 💡 **ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
 > - データ登録時はシート順序（SheetOrder）の昇順で実行されるため、外部キー制約のある親テーブルを先（シート順序が小さい方）に配置してください。
@@ -260,9 +269,11 @@ Oracleで使用可能な主なデータ型：
 
 ![OUTPUTフォルダ確認ボタン](guide-image/16_output_folder_check_button.png)
 
-2. output フォルダ内のSQLファイル一覧が表示されます（最大30件まで表示）
+2. output フォルダ内のGroupフォルダとSQLファイル一覧が表示されます
 
 ![OUTPUTフォルダ確認](guide-image/17_output_folder_check.png)
+
+> 💡 **ポイント**: Groupフォルダごとにファイル一覧が表示されます（各フォルダ最大10件まで表示）
 
 ### 7.2 出力フォルダを開く
 
@@ -326,6 +337,8 @@ Oracleで使用可能な主なデータ型：
 
 ![データ登録完了](guide-image/24_data_register_success.png)
 
+> 💡 **ポイント**: 選択したGroup番号に対応するフォルダ（`output/group{番号}/`）内のSQLファイルが順番に実行されます。
+
 > ⚠️ **注意**: エラーが発生した場合は `./output/sqlplus_log.txt` でログを確認してください。
 
 ### 9.2 エラーコードについて
@@ -382,6 +395,10 @@ Oracle固有のエラーコード：
 ### 「Group番号に数値を入力してください」
 - **原因**: プルダウンに無効な値が入力されている
 - **対処**: プルダウンから正しい数値を選択し直してください
+
+### 「group○フォルダが存在しません」
+- **原因**: データ登録時に対象のGroupフォルダが見つからない
+- **対処**: 先に「ファイル作成」を実行してGroupフォルダとSQLファイルを生成してください
 
 ### 「○○シートの対象テーブルが入力されていません」
 - **原因**: テーブル入力シートのB3セル（テーブル名）が空

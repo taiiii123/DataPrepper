@@ -148,17 +148,20 @@
 - **B10セル（最初のNo）は必ず「1」から開始**してください
 
 ```
-Group | No | → 出力ファイル
-------|----|---------------
-  1   | 1  | input1_{シート順序}_テーブル名.sql（DELETE + INSERT）
-  1   | 2  |                                   （INSERT追加）
-  1   | 3  |                                   （INSERT追加）
+Group | No | → 出力フォルダ/ファイル
+------|----|---------------------------
+  1   | 1  | group1/input1_{シート順序}_テーブル名.sql（DELETE + INSERT）
+  1   | 2  |                                          （INSERT追加）
+  1   | 3  |                                          （INSERT追加）
       |    |
-  2   | 1  | input2_{シート順序}_テーブル名.sql（DELETE + INSERT）
-  2   | 2  |                                   （INSERT追加）
+  2   | 1  | group2/input2_{シート順序}_テーブル名.sql（DELETE + INSERT）
+  2   | 2  |                                          （INSERT追加）
 ```
 
-> 💡 **ポイント**: シート順序は「_入力」で終わるシートの並び順（左から1, 2, 3...）で決まります。これにより、複数テーブル間の登録順序を制御できます。
+> 💡 **ポイント**:
+> - Group番号ごとにフォルダが分かれます（group1, group2, ...）
+> - シート順序は「_入力」で終わるシートの並び順（左から1, 2, 3...）で決まります
+> - これにより、複数テーブル間の登録順序を制御できます
 
 ![GroupとNoの関係](guide-image/10_group_no_explanation.png)
 
@@ -169,28 +172,6 @@ NULL を登録したい場合は、以下のいずれかを入力します：
 - `NULL`
 - `null`
 - `« NULL »`
-
-### 4.6 PostgreSQL固有のデータ型
-
-PostgreSQLで使用可能な主なデータ型：
-
-| データ型 | 説明 | 入力例 |
-|----------|------|--------|
-| INTEGER / INT | 整数 | 123 |
-| BIGINT | 大きな整数 | 9223372036854775807 |
-| SMALLINT | 小さな整数 | 32767 |
-| REAL | 単精度浮動小数点 | 3.14 |
-| DOUBLE PRECISION | 倍精度浮動小数点 | 3.14159265359 |
-| NUMERIC / DECIMAL | 任意精度数値 | 12345.67 |
-| VARCHAR | 可変長文字列 | テキスト |
-| CHAR | 固定長文字列 | ABC |
-| TEXT | 長いテキスト | 長い文章... |
-| BOOLEAN | 真偽値 | true / false |
-| DATE | 日付 | 2024/12/01 |
-| TIME | 時刻 | 14:30:00 |
-| TIMESTAMP | 日時 | 2024/12/01 14:30:00 |
-| TIMESTAMPTZ | タイムゾーン付き日時 | 2024/12/01 14:30:00 |
-| BYTEA | バイナリデータ | \x48656C6C6F |
 
 ---
 
@@ -231,12 +212,18 @@ PostgreSQLで使用可能な主なデータ型：
 ### 出力されるファイル
 ```
 ./output/
-├── input1_1_users.sql      ← Group 1, シート順序 1 のSQLファイル
-├── input1_2_orders.sql     ← Group 1, シート順序 2 のSQLファイル
-├── input2_1_users.sql      ← Group 2, シート順序 1 のSQLファイル
-├── input2_2_orders.sql     ← Group 2, シート順序 2 のSQLファイル
+├── group1/                     ← Group 1 のフォルダ
+│   ├── input1_1_users.sql      ← Group 1, シート順序 1 のSQLファイル
+│   └── input1_2_orders.sql     ← Group 1, シート順序 2 のSQLファイル
+├── group2/                     ← Group 2 のフォルダ
+│   ├── input2_1_users.sql      ← Group 2, シート順序 1 のSQLファイル
+│   └── input2_2_orders.sql     ← Group 2, シート順序 2 のSQLファイル
 └── ...
 ```
+
+> 💡 **フォルダ構成**: `output/group{GroupNo}/`
+> - Group番号ごとにフォルダが作成されます
+> - データ登録時は選択したGroupフォルダ内のファイルのみが実行されます
 
 > 💡 **ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
 > - データ登録時はシート順序（SheetOrder）の昇順で実行されるため、外部キー制約のある親テーブルを先（シート順序が小さい方）に配置してください。
@@ -253,9 +240,11 @@ PostgreSQLで使用可能な主なデータ型：
 
 ![OUTPUTフォルダ確認ボタン](guide-image/16_output_folder_check_button.png)
 
-2. output フォルダ内のSQLファイル一覧が表示されます（最大30件まで表示）
+2. output フォルダ内のGroupフォルダとSQLファイル一覧が表示されます
 
 ![OUTPUTフォルダ確認](guide-image/17_output_folder_check.png)
+
+> 💡 **ポイント**: Groupフォルダごとにファイル一覧が表示されます（各フォルダ最大10件まで表示）
 
 ### 7.2 出力フォルダを開く
 
@@ -315,6 +304,8 @@ PostgreSQLで使用可能な主なデータ型：
 
 ![データ登録完了](guide-image/24_data_register_success.png)
 
+> 💡 **ポイント**: 選択したGroup番号に対応するフォルダ（`output/group{番号}/`）内のSQLファイルが順番に実行されます。
+
 > ⚠️ **注意**: エラーが発生した場合は `./output/psql_log.txt` でログを確認してください。
 
 ---
@@ -366,6 +357,10 @@ PostgreSQLで使用可能な主なデータ型：
 - **原因**: プルダウンに無効な値が入力されている
 - **対処**: プルダウンから正しい数値を選択し直してください
 
+### 「group○フォルダが存在しません」
+- **原因**: データ登録時に対象のGroupフォルダが見つからない
+- **対処**: 先に「ファイル作成」を実行してGroupフォルダとSQLファイルを生成してください
+
 ### 「○○シートの対象テーブルが入力されていません」
 - **原因**: テーブル入力シートのB3セル（テーブル名）が空
 - **対処**: 対象テーブル名を入力してください
@@ -393,7 +388,3 @@ PostgreSQLで使用可能な主なデータ型：
 ### 「テストデータの登録に失敗しました」
 - **原因**: SQLの実行中にエラーが発生
 - **対処**: `./output/psql_log.txt` を確認し、SQL構文やデータ型のエラーを修正してください
-
-### 「PostgreSQL CLIツール(psql)が見つかりません」
-- **原因**: PostgreSQLがインストールされていないか、PATHが設定されていない
-- **対処**: PostgreSQLをインストールし、環境変数PATHにbinフォルダを追加してください
