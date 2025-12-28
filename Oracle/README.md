@@ -34,38 +34,49 @@ Oracle SQL*Plusコマンドラインツールが正しくインストールさ�
 
 ### 2. バックアップ実行
 指定したデータベースの現在のデータを `exp`（Export）コマンドでバックアップします。
-- 出力先: `./output/backup/backup_YYYYMMDD.dmp`
-- ログ: `./output/backup/backup_YYYYMMDD.log`
+
+**出力先**:
+- ダンプファイル: `./output/backup/backup_YYYYMMDD.dmp`
+- ログファイル: `./output/backup/backup_YYYYMMDD.log`
 
 ### 3. SQL ファイル作成
 入力シートのデータからINSERT文を含むSQLファイルを自動生成します。
-- 出力先: `./output/group{GroupNo}/input{GroupNo}_{SheetOrder}_テーブル名.sql`
+
+**主な特徴**:
 - DELETE文 + INSERT文 + COMMIT文のセットを生成
-- シート順序（SheetOrder）により、複数テーブルの登録順序を制御
+- シート順序により、複数テーブルの登録順序を制御
 - Group番号ごとにフォルダを分けて出力
 
+**出力先**: `./output/group{GroupNo}/input{GroupNo}_{SheetOrder}_テーブル名.sql`
+
 ### 4. SQL 文確認
-生成されるSQL文を新規ブックでプレビュー表示します。実際にファイル出力する前に内容を確認できます。
+生成されるSQL文を新規ブックでプレビュー表示します。
+実際にファイル出力する前に内容を確認できます。
 
 ### 5. データ登録
 生成したSQLファイルをOracle Databaseに直接実行してテストデータを登録します。
+
+**主な特徴**:
 - 選択したGroup番号に対応するフォルダ内のSQLファイルを順番に実行
 - 実行前確認オプション：実行ファイル一覧を表示して確認可能
 
 ### 6. OUTPUTフォルダ確認・表示
 出力フォルダ内のSQLファイル一覧を確認、またはエクスプローラーで開きます。
-- Groupフォルダごとにファイル一覧を表示
+
+**表示内容**: Groupフォルダごとにファイル一覧を表示
 
 ### 7. 実行ステータス表示
 各機能の実行状態（未実行/実行中/完了/エラー）と実行時刻をリアルタイムで表示します。
-- 「操作」シートのステータスエリアで確認可能
-- 各操作の実行履歴を視覚的に把握できます
+
+**確認方法**: 「操作」シートのステータスエリアで各操作の実行履歴を視覚的に把握
 
 ### 8. ステータスリセット
 全機能の実行ステータスを「未実行」に戻します。
 
 ### 9. テストデータ作成
 「テストデータ作成」シートで、様々な種類のランダムデータを生成できます。
+
+**サポートするデータ型**:
 
 | データ型 | 説明 | 設定項目 |
 |---------|------|----------|
@@ -108,13 +119,15 @@ Oracle SQL*Plusコマンドラインツールが正しくインストールさ�
 └── sqlplus_log.txt              # 実行ログ
 ```
 
-> **フォルダ構成**: `output/group{GroupNo}/`
-> - GroupNoごとにフォルダを分けて管理
-> - データ登録時は選択したGroupフォルダ内のファイルのみ実行
+### フォルダ構成の説明
 
-> **ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
-> - GroupNo: テストデータのGroup番号
-> - SheetOrder: 入力シートの順序番号（1から開始、登録順序を制御）
+**`output/group{GroupNo}/`**
+- GroupNoごとにフォルダを分けて管理
+- データ登録時は選択したGroupフォルダ内のファイルのみ実行
+
+**ファイル名形式**: `input{GroupNo}_{SheetOrder}_テーブル名.sql`
+- `GroupNo`: テストデータのGroup番号
+- `SheetOrder`: 入力シートの順序番号（1から開始、登録順序を制御）
 
 ## 生成されるSQLの形式
 
@@ -131,7 +144,7 @@ EXIT;
 
 テストデータの登録に問題が発生した場合、バックアップファイルからデータを復元できます。
 
-### コマンドプロンプトでのリストア
+### リストアコマンド
 
 ```bash
 imp ユーザー名/パスワード@ホスト名:ポート番号/サービス名 file=./output/backup/backup_YYYYMMDD.dmp log=restore.log
@@ -142,16 +155,16 @@ imp ユーザー名/パスワード@ホスト名:ポート番号/サービス名
 imp root/password123@localhost:1521/ORCL file=./output/backup/backup_20241224.dmp log=restore.log
 ```
 
-> ⚠️ **注意**: リストア前に現在のデータが上書きされることを理解した上で実行してください。
+> **⚠️ 重要**: リストア前に現在のデータが上書きされることを理解した上で実行してください。
 
-### オプション説明
+### オプション
 
 | オプション | 説明 |
 |-----------|------|
-| ユーザー名/パスワード | Oracleユーザーの認証情報 |
-| @ホスト名:ポート番号/サービス名 | Oracle接続文字列 |
-| file | インポートするダンプファイルのパス |
-| log | リストアログの出力先 |
+| `ユーザー名/パスワード` | Oracleユーザーの認証情報 |
+| `@ホスト名:ポート番号/サービス名` | Oracle接続文字列 |
+| `file` | インポートするダンプファイルのパス |
+| `log` | リストアログの出力先 |
 
 ## バージョン情報
 
@@ -172,32 +185,49 @@ imp root/password123@localhost:1521/ORCL file=./output/backup/backup_20241224.dm
 
 ## 注意事項
 
-- データ登録前に必ずバックアップを取得することを推奨します
-- パスワードは `./output/conf/execute_sqlplus.bat` ファイルに保存されます
-- 本番環境への誤登録にご注意ください
-- マクロを有効にして使用してください
-- SQLファイルはShift-JISで出力されます（Windows日本語環境のSQL*Plus対応）
-- 入力シートの7行目にはデータ型の入力が必須です
+> **⚠️ セキュリティ**
+> - パスワードは `./output/conf/execute_sqlplus.bat` ファイルに保存されます
+> - 本番環境への誤登録にご注意ください
+
+> **💡 推奨事項**
+> - データ登録前に必ずバックアップを取得することを推奨します
+> - マクロを有効にして使用してください
+
+> **📝 Oracle固有の注意点**
+> - SQLファイルはShift-JISで出力されます（Windows日本語環境のSQL*Plus対応）
+> - 入力シートの7行目にはデータ型の入力が必須です
 
 ## トラブルシューティング
 
-### Oracle SQL*Plus CLI ツールが見つからない場合
+<details>
+<summary><strong>Oracle SQL*Plus CLI ツールが見つからない場合</strong></summary>
+
 - Oracle Instant Clientがインストールされているか確認
 - 環境変数PATHにOracle Instant Clientのフォルダが追加されているか確認
 - `sqlplus -V` コマンドがコマンドプロンプトで実行できるか確認
+</details>
 
-### SQL ファイルが作成されない場合
+<details>
+<summary><strong>SQL ファイルが作成されない場合</strong></summary>
+
 - 入力シート名が「_入力」で終わっているか確認
 - 必須項目（テーブル名、WHERE句）が入力されているか確認
 - Group番号とNoが1から開始されているか確認
 - 7行目のデータ型が入力されているか確認
+</details>
 
-### データ登録でエラーが発生する場合
+<details>
+<summary><strong>データ登録でエラーが発生する場合</strong></summary>
+
 - `./output/sqlplus_log.txt` でエラー内容を確認
 - DB接続設定が正しいか確認
 - SQL文の構文エラーがないか確認
 - ORA-xxxxx または SP2-xxxxx エラーコードを確認
 - 対象のGroupフォルダ（`output/group{番号}/`）が存在するか確認
+</details>
 
-### 「group○フォルダが存在しません」と表示される場合
+<details>
+<summary><strong>「group○フォルダが存在しません」と表示される場合</strong></summary>
+
 - 先に「ファイル作成」を実行してGroupフォルダとSQLファイルを生成してください
+</details>
